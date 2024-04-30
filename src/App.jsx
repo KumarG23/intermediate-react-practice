@@ -1,21 +1,33 @@
-import { Link } from "react-router-dom"
+import { TeamProvider, useTeam } from "./main"
+import TeamMember from "./TeamMember"
+import Edit from "./About";
 
-const Title = () => {
+const HomeScreen = () => {
+  const { team } = useTeam();
+
   return (
-    <h1>
-      Hello World!
-    </h1>
+    <div>
+      <h2>Team Summary</h2>
+      <div>
+        {team.map((member, index) => (
+          <TeamMember key={index} member={member} />
+        ))}
+      </div>
+    </div>
   )
 }
 
 function App() {
-  return (
-    <div className="p-5">
-      <Link to='/about'>About</Link>
-      <Title />
+return (
+  <TeamProvider>
+    <div>
+      <HomeScreen />
+      <Edit />
     </div>
-  )
+  </TeamProvider>
+)
 }
+
 
 
 export default App
