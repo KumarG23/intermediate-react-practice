@@ -48,30 +48,46 @@ const router = createBrowserRouter([
 ])
 
 
-const TeamContext = createContext();
+export const TeamContext = createContext();
 
 const initialState = {
-  team: [], // empty array for adding team members
+  team: [
+    // {
+    //   id: 0,
+    //   name: '',
+    //   stats: []
+    // }
+  ], // empty array for adding team members
+
 };
+
 
 const TeamReducer = (state, action) => {
   switch(action.type) {
     case 'addMember': // add team members
+    if (state.team.length < 4){
+    console.log('adding member:', action.payload);
+      // action.payload.id = 
       return {
         ...state,
         team: [...state.team, action.payload]
       };
-    default:
+    } else {
+      alert('Max number of players have been reached');
+      console.log('action type:', action.type);
       return state; // default state
 
     }
-  };
+    default:
+      return state;
+  }
+};
 // provider component to apply state and dispatch to children
-export const TeamProvider = ({ children }) => {
-  const [team, dispatch] = useReducer(TeamReducer, initialState)
-
+const TeamProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(TeamReducer, initialState)
+console.log(state);
   return (
-    <TeamContext.Provider value={{ team, dispatch }}>
+    <TeamContext.Provider value={{ state, dispatch }}>
     {children}
     </ TeamContext.Provider>
   )
@@ -84,7 +100,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </TeamProvider>
 )
 
-export const useTeam = () => useContext(TeamContext);
+// export const useTeam = () => useContext(TeamContext);
 
 
 

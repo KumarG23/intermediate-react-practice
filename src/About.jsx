@@ -1,24 +1,27 @@
-import React, { useState } from "react"
-import { useTeam } from "./main"
+import React, { useContext, useState } from "react"
+import { TeamContext } from "./main";
+// import { useTeam } from "./main"
 //import { useReducer } from "react";
 
 
 const randomStats = () => {
   let stats = [];
   let points = 10;
+  let statNames = ['Health', 'Speed', 'Attack'];
+  let maxStat = [5, 5, 5];
 
-  for (let i = 0; i < 3; i++){
+  for (let i = 0; i < statNames.length; i++){
 
-    let stat = Math.floor(Math.random() * Math.min(points, 5)) + 1;
+    let stat = Math.floor(Math.random() * Math.min(points, maxStat[i])) + 1;
 
     points -= stat;
-    stats.push(stat);
+    stats.push({ name: statNames[i], value: stat });
   }
   return stats;
 }
 
 const EditTeamScreen = () => {
-  const { dispatch } = useTeam();
+  const { dispatch, state } = useContext(TeamContext);
   
   const [memberName, setMemberName] = useState('');
   const [memberStats, setMemberStats] = useState([]);
@@ -30,30 +33,37 @@ const EditTeamScreen = () => {
       name: memberName,
       stats: stats,
     };
-     console.log(stats);
+
+
     dispatch({ type: 'addMember', payload: newMember });
     setMemberName('');
-    setMemberStats(stats);
-     console.log(memberName);
-    };
+   setMemberStats(stats);
+  };
 
-    return (
+  return (
+    <div>
+      <input
+      type="text"
+      value={memberName}
+      onChange={(e) => setMemberName(e.target.value)}
+      placeholder = "Enter Name">
+      </input>
       <div>
-        <input
-        type="text"
-        value={memberName}
-        onChange={(e) => setMemberName(e.target.value)}
-        placeholder = "Enter Name">
-        </input>
-        <button onClick={addMember}>Add Name</button>
-        <div>
-          <h2>New Member:</h2>
-          <p>Name: {memberName}</p>
-          <p>Stats: {memberStats}</p>
-        </div>
-        
+      <button onClick={addMember}>Add Name</button>
+        <h2>New Member:</h2>
+        <p>Name: {memberName}</p>
+        <p>Stats:</p>
+        <ul>
+          {memberStats.map((stat, index) => (
+          <li key={index}>
+            {stat.name}: {stat.value}
+          </li>
+          ))}
+        </ul>
       </div>
-    )
+      
+    </div>
+  )
 };
 
 

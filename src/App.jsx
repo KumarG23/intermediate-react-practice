@@ -1,16 +1,17 @@
-import { TeamProvider, useTeam } from "./main"
+import { useContext } from "react"
 import TeamMember from "./TeamMember"
-import Edit from "./About";
+import { TeamContext } from "./main";
+
 
 const HomeScreen = () => {
-  const { team } = useTeam();
+  const { state } = useContext(TeamContext);
 
   return (
-    <div>
+    <div className="p-5">
       <h2>Team Summary</h2>
       <div>
-        {team.map((member, index) => (
-          <TeamMember key={index} member={member} />
+        {state.team.map((member, index) => (
+          <TeamMember key={index} memberName={member.name} memberStats={member.stats} />
         ))}
       </div>
     </div>
@@ -19,12 +20,10 @@ const HomeScreen = () => {
 
 function App() {
 return (
-  <TeamProvider>
+  
     <div>
       <HomeScreen />
-      <Edit />
     </div>
-  </TeamProvider>
 )
 }
 
